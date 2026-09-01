@@ -39,9 +39,15 @@ jobs:
           npx cap init RideLead com.ridelead.app --web-dir www
           npx cap add android
           
+          # Force overwrite web assets directly into Android project
+          mkdir -p android/app/src/main/assets/public
+          cp index.html android/app/src/main/assets/public/index.html
+
+          # Copy custom Java code
           mkdir -p android/app/src/main/java/com/ridelead/app
           cp -r android-custom/java/com/ridelead/app/* android/app/src/main/java/com/ridelead/app/
           
+          # Inject NotificationListenerService permission into Manifest
           MANIFEST_PATH="android/app/src/main/AndroidManifest.xml"
           SERVICE_DECLARATION='<service android:name=".WhatsAppNotificationService" android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE" android:exported="true"><intent-filter><action android:name="android.service.notification.NotificationListenerService" /></intent-filter></service></application>'
           sed -i "s|</application>|${SERVICE_DECLARATION}|g" $MANIFEST_PATH
