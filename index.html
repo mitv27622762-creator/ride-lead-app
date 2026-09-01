@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ride Lead Filter</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
+    body { background: #dce4ec; padding: 16px 12px; display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
+    
+    .header-title { font-size: 18px; font-weight: bold; color: #1a1a1a; margin-bottom: 12px; }
+    #leads-container { width: 100%; max-width: 400px; display: flex; flex-direction: column; gap: 16px; }
+
+    .ride-card {
+      background: #fff8eb;
+      border-radius: 24px;
+      width: 100%;
+      padding: 16px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+    }
+    
+    .card-header {
+      background: #181715;
+      margin: -16px -16px 16px -16px;
+      padding: 16px;
+      border-radius: 24px 24px 0 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .vehicle-tag {
+      background: #2b2822;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #ffd24c;
+    }
+
+    .ride-time { font-size: 12px; color: #aaa; }
+    
+    .fare-amount {
+      color: #fabb18;
+      font-size: 32px;
+      font-weight: 800;
+      margin: 8px 0;
+    }
+    .fare-amount span { font-size: 14px; color: #777; font-weight: 400; }
+
+    .route-details { padding: 8px 4px; }
+    
+    .route-step {
+      position: relative;
+      padding-left: 28px;
+      margin-bottom: 16px;
+    }
+    .route-step::before {
+      content: '';
+      position: absolute;
+      left: 4px;
+      top: 6px;
+      width: 10px;
+      height: 10px;
+      background: #000;
+      border-radius: 50%;
+    }
+    .route-step.drop::before {
+      border-radius: 0;
+      transform: rotate(45deg);
+    }
+    
+    .distance { font-size: 16px; font-weight: 800; color: #000; }
+    .address { font-size: 13px; color: #4a4a4a; margin-top: 2px; line-height: 1.35; }
+    
+    .btn-accept {
+      background: #fbc02d;
+      border: none;
+      width: 100%;
+      height: 52px;
+      border-radius: 26px;
+      font-size: 20px;
+      font-weight: 800;
+      color: #000;
+      cursor: pointer;
+      margin-top: 8px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header-title">Live Ride Leads</div>
+
+  <div id="leads-container">
+    <div class="ride-card">
+      <div class="card-header">
+        <div class="vehicle-tag">🚕 Sedan</div>
+        <div class="ride-time">1:15 PM</div>
+      </div>
+      <div class="fare-amount">₹500 <span>(Cash)</span></div>
+      
+      <div class="route-details">
+        <div class="route-step">
+          <div class="distance">Pickup</div>
+          <div class="address"><b>T1 Airport Terminal</b></div>
+        </div>
+        
+        <div class="route-step drop">
+          <div class="distance">Drop</div>
+          <div class="address"><b>Keman Tree, Marol</b></div>
+        </div>
+      </div>
+
+      <button class="btn-accept" onclick="acceptLead('sample-id')">Accept</button>
+    </div>
+  </div>
+
+  <script>
+    function acceptLead(leadId) {
+      if (window.AndroidBridge) {
+        window.AndroidBridge.acceptRideAndOpenWhatsApp(leadId, "Accepted");
+      }
+    }
+  </script>
+</body>
+</html>
