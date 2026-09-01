@@ -22,6 +22,12 @@ jobs:
         with:
           node-version: '18'
 
+      - name: Inject Gemini Key
+        env:
+          GEMINI_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: |
+          sed -i "s/GEMINI_KEY_PLACEHOLDER/${GEMINI_KEY}/g" android-custom/java/com/ridelead/app/WhatsAppNotificationService.java
+
       - name: Build APK via Capacitor
         env:
           GRADLE_USER_HOME: ${{ github.workspace }}/.gradle
@@ -36,6 +42,10 @@ jobs:
           mkdir -p android/app/src/main/java/com/ridelead/app
           cp -r android-custom/java/com/ridelead/app/* android/app/src/main/java/com/ridelead/app/
           
+          MANIFEST_PATH="android/app/src/main/AndroidManifest.xml"
+          SERVICE_DECLARATION='<service android:name=".WhatsAppNotificationService" android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE" android:exported="true"><intent-filter><action android:name="android.service.notification.NotificationListenerService" /></intent-filter></service></application>'
+          sed -i "s|</application>|${SERVICE_DECLARATION}|g" $MANIFEST_PATH
+
           npx cap sync
           cd android
           chmod +x gradlew
